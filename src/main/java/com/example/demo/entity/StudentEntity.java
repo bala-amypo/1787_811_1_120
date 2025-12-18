@@ -13,6 +13,7 @@ public class StudentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Colume(unique=true);
     private String email;
     private float cgpa;
 
