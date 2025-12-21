@@ -27,8 +27,8 @@ public class QuotaPlanEntity {
     @Column(nullable = false)
     private Boolean active = true;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+  
+ 
 
     public String getPlanName() { return planName; }
     public void setPlanName(String planName) { this.planName = planName; }

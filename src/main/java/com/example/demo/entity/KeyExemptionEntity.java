@@ -28,7 +28,7 @@ public class KeyExemptionEntity {
     @Column(nullable = false)
     private Timestamp validUntil;
 
-    public Long getId() { return id; }
+
     public ApiKeyEntity getApiKey() { return apiKey; }
     public void setApiKey(ApiKeyEntity apiKey) { this.apiKey = apiKey; }
 
