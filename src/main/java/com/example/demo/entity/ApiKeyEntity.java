@@ -45,11 +45,13 @@ public class ApiKeyEntity {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
-
+    public Long getId() { return id; }
     public String getKeyValue() { return keyValue; }
     public void setKeyValue(String keyValue) { this.keyValue = keyValue; }
 
- 
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
     public QuotaPlanEntity getPlan() { return plan; }
     public void setPlan(QuotaPlanEntity plan) { this.plan = plan; }
 
