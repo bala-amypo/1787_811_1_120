@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.QuotaPlan;
+import com.example.demo.entity.ApiKey;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class QuotaPlanController {
+public class ApiKeyController {
     // Empty - just to compile
 }
