@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class ApiKey {
+public class ApiKeyEntity {
 
     @Id
     @GeneratedValue
