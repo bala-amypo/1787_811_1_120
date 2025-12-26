@@ -1,53 +1,51 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.*;
-import com.example.demo.entity.UserAccount;
+import com.example.demo.entity.ApiKey;
+import com.example.demo.entity.QuotaPlan;
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.repository.UserAccountRepository;
-import com.example.demo.security.JwtUtil;
-import com.example.demo.service.AuthService;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ApiKeyRepository;
+import com.example.demo.repository.QuotaPlanRepository;
+import com.example.demo.service.ApiKeyService;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
 
-import java.util.Map;
+public class ApiKeyServiceImpl implements ApiKeyService {
 
-public class AuthServiceImpl implements AuthService {
+    private final ApiKeyRepository repo;
+    private final QuotaPlanRepository planRepo;
 
-    private final UserAccountRepository repo;
-    private final PasswordEncoder encoder;
-    private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
-
-    public AuthServiceImpl(UserAccountRepository repo,
-                           PasswordEncoder encoder,
-                           AuthenticationManager authManager,
-                           JwtUtil jwtUtil) {
+    public ApiKeyServiceImpl(ApiKeyRepository repo, QuotaPlanRepository planRepo) {
         this.repo = repo;
-        this.encoder = encoder;
-        this.authManager = authManager;
-        this.jwtUtil = jwtUtil;
+        this.planRepo = planRepo;
     }
 
-    @Override
-    public void register(RegisterRequestDto dto) {
-        if (repo.existsByEmail(dto.getEmail()))
-            throw new BadRequestException("Email exists");
+    public ApiKey createApiKey(ApiKey key) {
+        QuotaPlan plan = planRepo.findById(key.getPlan().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Plan"));
 
-        UserAccount u = new UserAccount();
-        u.setEmail(dto.getEmail());
-        u.setPassword(encoder.encode(dto.getPassword()));
-        u.setRole("ROLE_" + dto.getRole());
+        if (!plan.isActive())
+            throw new BadRequestException("Plan inactive");
 
-        repo.save(u);
+        return repo.save(key);
     }
 
-    @Override
-    public AuthResponseDto login(AuthRequestDto dto) {
-        UserAccount user = repo.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new BadRequestException("Invalid user"));
+    public ApiKey getApiKeyById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Key"));
+    }
 
-        String token = jwtUtil.generateToken(Map.of(), user.getEmail());
-        return new AuthResponseDto(token);
+    public ApiKey getApiKeyByValue(String value) {
+        return repo.findByKeyValue(value)
+                .orElseThrow(() -> new ResourceNotFoundException("Key"));
+    }
+
+    public void deactivateApiKey(Long id) {
+        ApiKey k = getApiKeyById(id);
+        k.setActive(false);
+    }
+
+    public List<ApiKey> getAllApiKeys() {
+        return repo.findAll();
     }
 }

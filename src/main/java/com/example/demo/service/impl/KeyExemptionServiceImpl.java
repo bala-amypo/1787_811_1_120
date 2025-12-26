@@ -1,40 +1,35 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.KeyExemptionEntity;
+import com.example.demo.entity.KeyExemption;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.KeyExemptionRepository;
 import com.example.demo.service.KeyExemptionService;
-import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-
-@Service
 public class KeyExemptionServiceImpl implements KeyExemptionService {
 
-    private final KeyExemptionRepository exemptionRepo;
+    private final KeyExemptionRepository repo;
+    private final ApiKeyRepository keyRepo;
 
-    public KeyExemptionServiceImpl(KeyExemptionRepository exemptionRepo) {
-        this.exemptionRepo = exemptionRepo;
+    public KeyExemptionServiceImpl(KeyExemptionRepository repo,
+                                   ApiKeyRepository keyRepo) {
+        this.repo = repo;
+        this.keyRepo = keyRepo;
     }
 
-    @Override
-    public KeyExemptionEntity getByApiKey(ApiKeyEntity apiKey) {
-        return exemptionRepo.findByApiKey(apiKey).orElse(null);
+    public KeyExemption createExemption(KeyExemption e) {
+        if (e.getTemporaryExtensionLimit() < 0)
+            throw new BadRequestException("Invalid");
+
+        keyRepo.findById(e.getApiKey().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Key"));
+
+        return repo.save(e);
     }
 
-    @Override
-    public boolean hasUnlimitedAccess(ApiKeyEntity apiKey) {
-        KeyExemptionEntity ex = getByApiKey(apiKey);
-        return ex != null && Boolean.TRUE.equals(ex.getUnlimitedAccess())
-                && ex.getValidUntil().after(new Timestamp(System.currentTimeMillis()));
-    }
-
-    @Override
-    public int getTemporaryExtension(ApiKeyEntity apiKey) {
-        KeyExemptionEntity ex = getByApiKey(apiKey);
-        if (ex == null || ex.getValidUntil().before(new Timestamp(System.currentTimeMillis()))) {
-            return 0;
-        }
-        return ex.getTemporaryExtensionLimit() == null ? 0 : ex.getTemporaryExtensionLimit();
+    public KeyExemption getExemptionByKey(Long id) {
+        return repo.findByApiKey_Id(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
     }
 }

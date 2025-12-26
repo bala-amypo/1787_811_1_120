@@ -1,33 +1,41 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.RateLimitEnforcementEntity;
+import com.example.demo.entity.RateLimitEnforcement;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.RateLimitEnforcementRepository;
 import com.example.demo.service.RateLimitEnforcementService;
-import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.util.List;
 
-@Service
 public class RateLimitEnforcementServiceImpl implements RateLimitEnforcementService {
 
-    private final RateLimitEnforcementRepository enforcementRepo;
+    private final RateLimitEnforcementRepository repo;
+    private final ApiKeyRepository keyRepo;
 
-    public RateLimitEnforcementServiceImpl(RateLimitEnforcementRepository enforcementRepo) {
-        this.enforcementRepo = enforcementRepo;
+    public RateLimitEnforcementServiceImpl(RateLimitEnforcementRepository repo,
+                                          ApiKeyRepository keyRepo) {
+        this.repo = repo;
+        this.keyRepo = keyRepo;
     }
 
-    @Override
-    public void enforceLimit(ApiKeyEntity apiKey, long currentUsage) {
-        int allowed = apiKey.getPlan().getDailyLimit();
-        if (currentUsage > allowed) {
-            RateLimitEnforcementEntity block = new RateLimitEnforcementEntity();
-            block.setApiKey(apiKey);
-            block.setBlockedAt(new Timestamp(System.currentTimeMillis()));
-            block.setLimitExceededBy((int) (currentUsage - allowed));
-            block.setMessage("Daily quota exceeded");
-            enforcementRepo.save(block);
-            throw new RuntimeException("Rate limit exceeded");
-        }
+    public RateLimitEnforcement createEnforcement(RateLimitEnforcement e) {
+        if (e.getLimitExceededBy() <= 0)
+            throw new BadRequestException("Invalid");
+
+        keyRepo.findById(e.getApiKey().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Key"));
+
+        return repo.save(e);
+    }
+
+    public RateLimitEnforcement getEnforcementById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+    }
+
+    public List<RateLimitEnforcement> getEnforcementsForKey(Long id) {
+        return repo.findByApiKey_Id(id);
     }
 }

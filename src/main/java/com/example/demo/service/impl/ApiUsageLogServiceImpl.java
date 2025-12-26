@@ -1,43 +1,48 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.ApiUsageLogEntity;
+import com.example.demo.entity.ApiUsageLog;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.ApiUsageLogRepository;
 import com.example.demo.service.ApiUsageLogService;
-import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.List;
 
-@Service
 public class ApiUsageLogServiceImpl implements ApiUsageLogService {
 
-    private final ApiUsageLogRepository usageRepo;
+    private final ApiUsageLogRepository repo;
+    private final ApiKeyRepository keyRepo;
 
-    public ApiUsageLogServiceImpl(ApiUsageLogRepository usageRepo) {
-        this.usageRepo = usageRepo;
+    public ApiUsageLogServiceImpl(ApiUsageLogRepository repo, ApiKeyRepository keyRepo) {
+        this.repo = repo;
+        this.keyRepo = keyRepo;
     }
 
-    @Override
-    public void logUsage(ApiKeyEntity apiKey, String endpoint) {
-        ApiUsageLogEntity log = new ApiUsageLogEntity();
-        log.setApiKey(apiKey);
-        log.setEndpoint(endpoint);
-        log.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        usageRepo.save(log);
+    public ApiUsageLog logUsage(ApiUsageLog log) {
+        if (log.getTimestamp().isAfter(Instant.now()))
+            throw new BadRequestException("Future timestamp");
+
+        keyRepo.findById(log.getApiKey().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Key"));
+
+        return repo.save(log);
     }
 
-    @Override
-    public long countUsageToday(ApiKeyEntity apiKey) {
-        LocalDate today = LocalDate.now();
-        Timestamp start = Timestamp.valueOf(today.atStartOfDay());
-        Timestamp end = Timestamp.valueOf(today.plusDays(1).atStartOfDay());
-        return usageRepo.countByApiKeyAndTimestampBetween(apiKey, start, end);
+    public List<ApiUsageLog> getUsageForToday(Long id) {
+        return repo.findForKeyBetween(id,
+                Instant.now().minusSeconds(86400),
+                Instant.now());
     }
 
-    @Override
-    public long countUsageBetween(ApiKeyEntity apiKey, Timestamp start, Timestamp end) {
-        return usageRepo.countByApiKeyAndTimestampBetween(apiKey, start, end);
+    public int countRequestsToday(Long id) {
+        return repo.countForKeyBetween(id,
+                Instant.now().minusSeconds(86400),
+                Instant.now());
+    }
+
+    public List<ApiUsageLog> getUsageForApiKey(Long id) {
+        return repo.findByApiKey_Id(id);
     }
 }

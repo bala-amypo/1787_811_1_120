@@ -1,0 +1,30 @@
+package com.example.demo.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+import java.util.Map;
+
+public class JwtUtil {
+
+    public String generateToken(Map<String, Object> claims, String username) {
+        return "JWT_TOKEN";
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.claims();
+    }
+
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public boolean isTokenValid(String token, String username) {
+        return username.equals(getUsername(token));
+    }
+
+    public long getExpirationMillis() {
+        return 3600000;
+    }
+}
+
