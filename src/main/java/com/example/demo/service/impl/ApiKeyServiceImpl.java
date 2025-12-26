@@ -1,63 +1,51 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.QuotaPlanEntity;
 import com.example.demo.entity.UserAccountEntity;
+import com.example.demo.entity.QuotaPlanEntity;
 import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.QuotaPlanRepository;
-import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.ApiKeyService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class ApiKeyServiceImpl implements ApiKeyService {
 
-    private final ApiKeyRepository apiKeyRepo;
-    private final UserAccountRepository userRepo;
-    private final QuotaPlanRepository planRepo;
+    private final ApiKeyRepository apiKeyRepository;
+    private final QuotaPlanRepository quotaPlanRepository;
 
-    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepo,
-                             UserAccountRepository userRepo,
-                             QuotaPlanRepository planRepo) {
-        this.apiKeyRepo = apiKeyRepo;
-        this.userRepo = userRepo;
-        this.planRepo = planRepo;
+    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepository, QuotaPlanRepository quotaPlanRepository) {
+        this.apiKeyRepository = apiKeyRepository;
+        this.quotaPlanRepository = quotaPlanRepository;
     }
 
     @Override
-    public ApiKeyEntity generateKey(Long userId, Long planId) {
-
-        UserAccountEntity user = userRepo.findById(userId).orElseThrow();
-        QuotaPlanEntity plan = planRepo.findById(planId).orElseThrow();
-
+    public ApiKeyEntity createKey(UserAccountEntity user, String planName) {
         ApiKeyEntity key = new ApiKeyEntity();
-        key.setKeyValue(UUID.randomUUID().toString());
+        key.setKey(UUID.randomUUID().toString());
         key.setOwner(user);
+
+        QuotaPlanEntity plan = quotaPlanRepository.findAll()
+                .stream()
+                .filter(p -> p.getName().equalsIgnoreCase(planName))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
         key.setPlan(plan);
-
-        return apiKeyRepo.save(key);
+        return apiKeyRepository.save(key);
     }
 
     @Override
-    public ApiKeyEntity getByKeyValue(String keyValue) {
-        return apiKeyRepo.findByKeyValue(keyValue).orElseThrow();
+    public Optional<ApiKeyEntity> getKey(String key) {
+        return apiKeyRepository.findByKey(key);
     }
 
     @Override
-    public List<ApiKeyEntity> getKeysByUser(Long userId) {
-        return apiKeyRepo.findByOwner_Id(userId);
-    }
-
-    @Override
-    public void deactivateKey(Long keyId) {
-        ApiKeyEntity key = apiKeyRepo.findById(keyId).orElseThrow();
-        key.setActive(false);
-        apiKeyRepo.save(key);
-    }
-
-    @Override
-    public List<ApiKeyEntity> getAllApiKeys() {
-        return apiKeyRepo.findAll();
+    public List<ApiKeyEntity> getAllKeys() {
+        return apiKeyRepository.findAll();
     }
 }
