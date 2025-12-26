@@ -1,17 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.ApiKeyEntity;
+import com.example.demo.entity.ApiKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface ApiKeyRepository extends JpaRepository<ApiKeyEntity, Long> {
-
-    Optional<ApiKeyEntity> findByKeyValue(String keyValue);
-
-    List<ApiKeyEntity> findByOwnerId(Long ownerId);
-
-    boolean existsByKeyValue(String keyValue);
+public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
+    Optional<ApiKey> findByKeyValue(String keyValue);
 }
-

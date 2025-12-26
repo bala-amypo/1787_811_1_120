@@ -1,20 +1,19 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.ApiUsageLogEntity;
+import com.example.demo.entity.ApiUsageLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
-public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLogEntity, Long> {
+public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> {
 
-    List<ApiUsageLogEntity> findByApiKey(ApiKeyEntity apiKey);
+    List<ApiUsageLog> findByApiKey_Id(Long id);
 
-    long countByApiKeyAndTimestampBetween(
-            ApiKeyEntity apiKey,
-            Timestamp start,
-            Timestamp end
-    );
+    @Query("select u from ApiUsageLog u where u.apiKey.id=:id and u.timestamp between :s and :e")
+    List<ApiUsageLog> findForKeyBetween(Long id, Instant s, Instant e);
+
+    @Query("select count(u) from ApiUsageLog u where u.apiKey.id=:id and u.timestamp between :s and :e")
+    int countForKeyBetween(Long id, Instant s, Instant e);
 }
-

@@ -1,13 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.KeyExemptionEntity;
+import com.example.demo.entity.KeyExemption;
 
 public interface KeyExemptionService {
-
-    KeyExemptionEntity getByApiKey(ApiKeyEntity apiKey);
-
-    boolean hasUnlimitedAccess(ApiKeyEntity apiKey);
-
-    int getTemporaryExtension(ApiKeyEntity apiKey);
+    KeyExemption createExemption(KeyExemption e);
+    KeyExemption getExemptionByKey(Long apiKeyId);
 }

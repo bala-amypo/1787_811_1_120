@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
+import com.example.demo.dto.AuthRequestDto;
+import com.example.demo.dto.AuthResponseDto;
+import com.example.demo.dto.RegisterRequestDto;
 
-@Service
-public class AuthService {
-
-    // TEMP: hardcoded (for testing)
-    public boolean authenticate(String username, String password) {
-        return "admin".equals(username) && "admin123".equals(password);
-    }
+public interface AuthService {
+    void register(RegisterRequestDto dto);
+    AuthResponseDto login(AuthRequestDto dto);
 }

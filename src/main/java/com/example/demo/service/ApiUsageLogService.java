@@ -1,14 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.ApiKeyEntity;
+import com.example.demo.entity.ApiUsageLog;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 public interface ApiUsageLogService {
-
-    void logUsage(ApiKeyEntity apiKey, String endpoint);
-
-    long countUsageToday(ApiKeyEntity apiKey);
-
-    long countUsageBetween(ApiKeyEntity apiKey, Timestamp start, Timestamp end);
+    ApiUsageLog logUsage(ApiUsageLog log);
+    List<ApiUsageLog> getUsageForToday(Long apiKeyId);
+    int countRequestsToday(Long apiKeyId);
+    List<ApiUsageLog> getUsageForApiKey(Long apiKeyId);
 }

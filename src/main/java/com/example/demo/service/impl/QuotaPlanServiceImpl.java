@@ -1,34 +1,45 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.QuotaPlanEntity;
+import com.example.demo.entity.QuotaPlan;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.QuotaPlanRepository;
 import com.example.demo.service.QuotaPlanService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class QuotaPlanServiceImpl implements QuotaPlanService {
 
-    private final QuotaPlanRepository planRepo;
+    private final QuotaPlanRepository repo;
 
-    public QuotaPlanServiceImpl(QuotaPlanRepository planRepo) {
-        this.planRepo = planRepo;
+    public QuotaPlanServiceImpl(QuotaPlanRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public QuotaPlanEntity createPlan(QuotaPlanEntity plan) {
-        return planRepo.save(plan);
+    public QuotaPlan createQuotaPlan(QuotaPlan plan) {
+        if (plan.getDailyLimit() <= 0)
+            throw new BadRequestException("Invalid limit");
+        return repo.save(plan);
     }
 
-    @Override
-    public List<QuotaPlanEntity> getAllPlans() {
-        return planRepo.findAll();
+    public QuotaPlan getQuotaPlanById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
     }
 
-    @Override
-    public QuotaPlanEntity getPlanById(Long id) {
-        return planRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plan not found"));
+    public void deactivateQuotaPlan(Long id) {
+        QuotaPlan p = getQuotaPlanById(id);
+        p.setActive(false);
+    }
+
+    public QuotaPlan updateQuotaPlan(Long id, QuotaPlan updated) {
+        QuotaPlan p = getQuotaPlanById(id);
+        p.setPlanName(updated.getPlanName());
+        p.setDailyLimit(updated.getDailyLimit());
+        return repo.save(p);
+    }
+
+    public List<QuotaPlan> getAllPlans() {
+        return repo.findAll();
     }
 }
