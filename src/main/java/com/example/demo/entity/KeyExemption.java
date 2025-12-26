@@ -3,7 +3,7 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
-public class KeyExemptionEntity {
+public class KeyExemption{
     private Long id;
     private ApiKey apiKey;
     private int temporaryExtensionLimit;

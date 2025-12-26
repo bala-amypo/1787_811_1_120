@@ -1,7 +1,7 @@
 // src/main/java/com/example/demo/entity/UserAccount.java
 package com.example.demo.entity;
 
-public class UserAccountEntity {
+public class UserAccount{
     private Long id;
     private String email;
     private String password;
