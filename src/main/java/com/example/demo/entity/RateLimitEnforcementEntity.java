@@ -1,30 +1,34 @@
+// src/main/java/com/example/demo/entity/RateLimitEnforcement.java
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-
-@Entity
-public class RateLimitEnforcementEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RateLimitEnforcement {
     private Long id;
+    private ApiKey apiKey;
+    private int limitExceededBy;
+    private String message;
 
-    @ManyToOne
-    private ApiKeyEntity apiKey;
-
-    private Long count;
-    private LocalDate date;
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public ApiKeyEntity getApiKey() { return apiKey; }
-    public void setApiKey(ApiKeyEntity apiKey) { this.apiKey = apiKey; }
-
-    public Long getCount() { return count; }
-    public void setCount(Long count) { this.count = count; }
-
-    public LocalDate getDate() { return date; }
-    public void setDate(LocalDate date) { this.date = date; }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public ApiKey getApiKey() {
+        return apiKey;
+    }
+    public void setApiKey(ApiKey apiKey) {
+        this.apiKey = apiKey;
+    }
+    public int getLimitExceededBy() {
+        return limitExceededBy;
+    }
+    public void setLimitExceededBy(int limitExceededBy) {
+        this.limitExceededBy = limitExceededBy;
+    }
+    public String getMessage() {
+        return message;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

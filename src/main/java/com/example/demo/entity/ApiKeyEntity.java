@@ -1,31 +1,41 @@
+// src/main/java/com/example/demo/entity/ApiKey.java
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-
-@Entity
-public class ApiKeyEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ApiKey {
     private Long id;
+    private String keyValue;
+    private QuotaPlan plan;
+    private Long ownerId;
+    private boolean active;
 
-    private String key;
-
-    @ManyToOne
-    private UserAccountEntity owner;
-
-    @ManyToOne
-    private QuotaPlanEntity plan;
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getKey() { return key; }
-    public void setKey(String key) { this.key = key; }
-
-    public UserAccountEntity getOwner() { return owner; }
-    public void setOwner(UserAccountEntity owner) { this.owner = owner; }
-
-    public QuotaPlanEntity getPlan() { return plan; }
-    public void setPlan(QuotaPlanEntity plan) { this.plan = plan; }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getKeyValue() {
+        return keyValue;
+    }
+    public void setKeyValue(String keyValue) {
+        this.keyValue = keyValue;
+    }
+    public QuotaPlan getPlan() {
+        return plan;
+    }
+    public void setPlan(QuotaPlan plan) {
+        this.plan = plan;
+    }
+    public Long getOwnerId() {
+        return ownerId;
+    }
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+    public boolean isActive() {
+        return active;
+    }
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
