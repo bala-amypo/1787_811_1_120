@@ -1,66 +1,45 @@
 package com.example.demo.config;
 
-import com.example.demo.repository.*;
-import com.example.demo.security.JwtUtil;
-import com.example.demo.service.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.authentication.Authentication;
 
 @Configuration
 public class AppConfig {
 
+    // Bean for password encoding
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Bean for user details service
     @Bean
-    public AuthenticationManager authenticationManager() {
-        return new AuthenticationManager() {
-            @Override
-            public Authentication authenticate(Authentication authentication) throws org.springframework.security.core.AuthenticationException {
-                return authentication;
-            }
+    public UserDetailsService userDetailsService() {
+        // You can replace this with your custom implementation
+        return username -> {
+            throw new RuntimeException("User not found: " + username);
         };
     }
 
+    // Bean for authentication provider
     @Bean
-    public JwtUtil jwtUtil() {
-        return new JwtUtil();
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
+    // Bean for authentication manager
     @Bean
-    public AuthServiceImpl authService(UserAccountRepository userRepo, PasswordEncoder passwordEncoder, 
-                                     AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        return new AuthServiceImpl(userRepo, passwordEncoder, authenticationManager, jwtUtil);
-    }
-
-    @Bean
-    public QuotaPlanServiceImpl quotaPlanService(QuotaPlanRepository quotaPlanRepo) {
-        return new QuotaPlanServiceImpl(quotaPlanRepo);
-    }
-
-    @Bean
-    public ApiKeyServiceImpl apiKeyService(ApiKeyRepository apiKeyRepo, QuotaPlanRepository quotaPlanRepo) {
-        return new ApiKeyServiceImpl(apiKeyRepo, quotaPlanRepo);
-    }
-
-    @Bean
-    public ApiUsageLogServiceImpl usageService(ApiUsageLogRepository usageRepo, ApiKeyRepository apiKeyRepo) {
-        return new ApiUsageLogServiceImpl(usageRepo, apiKeyRepo);
-    }
-
-    @Bean
-    public RateLimitEnforcementServiceImpl enforcementService(RateLimitEnforcementRepository enforceRepo, ApiKeyRepository apiKeyRepo) {
-        return new RateLimitEnforcementServiceImpl(enforceRepo, apiKeyRepo);
-    }
-
-    @Bean
-    public KeyExemptionServiceImpl exemptionService(KeyExemptionRepository exemptionRepo, ApiKeyRepository apiKeyRepo) {
-        return new KeyExemptionServiceImpl(exemptionRepo, apiKeyRepo);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
