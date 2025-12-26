@@ -1,7 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.QuotaPlan;
-import com.example.demo.exception.*;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.QuotaPlanRepository;
 import com.example.demo.service.QuotaPlanService;
 
