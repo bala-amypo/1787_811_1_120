@@ -25,4 +25,3 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
- mvn testng:test -Dtestng.suite.src=1 -Dtest=ApiRateLimiterQuotaManagerTest
