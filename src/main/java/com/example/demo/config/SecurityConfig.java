@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/config/SecurityConfig.java
 package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
@@ -19,4 +20,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
