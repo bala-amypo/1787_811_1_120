@@ -1,17 +1,12 @@
 package com.example.demo.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Entity
-@Table(name = "api_usage_logs")
 public class ApiUsageLog {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
-    @NotNull @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "api_key_id", nullable = false) private ApiKey apiKey;
-    @NotBlank @Column(nullable = false) private String endpoint;
-    @NotNull @Column(nullable = false) private Instant timestamp = Instant.now();
+    private Long id;
+    private ApiKey apiKey;
+    private String endpoint;
+    private Instant timestamp = Instant.now();
 
     public ApiUsageLog() {}
     public Long getId() { return id; } public void setId(Long id) { this.id = id; }

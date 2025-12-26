@@ -1,17 +1,12 @@
 package com.example.demo.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Entity
-@Table(name = "key_exemptions")
 public class KeyExemption {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
-    @NotNull @OneToOne(fetch = FetchType.LAZY) @JoinColumn(name = "api_key_id", nullable = false) private ApiKey apiKey;
-    @NotNull @Min(0) @Column(name = "temporary_extension_limit", nullable = false) private int temporaryExtensionLimit;
-    @NotNull @Column(name = "valid_until", nullable = false) private Instant validUntil;
+    private Long id;
+    private ApiKey apiKey;
+    private int temporaryExtensionLimit;
+    private Instant validUntil;
 
     public KeyExemption() {}
     public Long getId() { return id; } public void setId(Long id) { this.id = id; }
