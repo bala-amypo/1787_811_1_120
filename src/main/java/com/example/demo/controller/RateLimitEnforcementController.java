@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.RateLimitEnforcementEntity;
+import com.example.demo.entity.ApiKey;
+import com.example.demo.entity.RateLimitEnforcement;
 import com.example.demo.service.ApiKeyService;
 import com.example.demo.repository.RateLimitEnforcementRepository;
 import org.springframework.web.bind.annotation.*;

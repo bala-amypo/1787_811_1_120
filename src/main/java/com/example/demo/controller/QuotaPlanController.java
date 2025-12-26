@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.QuotaPlanEntity;
+import com.example.demo.entity.QuotaPlan;
 import com.example.demo.service.QuotaPlanService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.ApiKeyEntity;
+import com.example.demo.entity.ApiKey;
 import com.example.demo.service.ApiKeyService;
 import com.example.demo.service.ApiUsageLogService;
 import com.example.demo.service.RateLimitEnforcementService;

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.KeyExemptionEntity;
+import com.example.demo.entity.ApiKey;
+import com.example.demo.entity.KeyExemption;
 import com.example.demo.repository.KeyExemptionRepository;
 import com.example.demo.service.ApiKeyService;
 import org.springframework.web.bind.annotation.*;
