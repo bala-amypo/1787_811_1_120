@@ -1,51 +1,62 @@
+// src/main/java/com/example/demo/service/impl/ApiKeyServiceImpl.java
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ApiKeyEntity;
-import com.example.demo.entity.UserAccountEntity;
-import com.example.demo.entity.QuotaPlanEntity;
+import com.example.demo.entity.ApiKey;
+import com.example.demo.entity.QuotaPlan;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.QuotaPlanRepository;
 import com.example.demo.service.ApiKeyService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
-@Service
 public class ApiKeyServiceImpl implements ApiKeyService {
 
-    private final ApiKeyRepository apiKeyRepository;
-    private final QuotaPlanRepository quotaPlanRepository;
+    private final ApiKeyRepository apiKeyRepo;
+    private final QuotaPlanRepository quotaPlanRepo;
 
-    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepository, QuotaPlanRepository quotaPlanRepository) {
-        this.apiKeyRepository = apiKeyRepository;
-        this.quotaPlanRepository = quotaPlanRepository;
+    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepo,
+                             QuotaPlanRepository quotaPlanRepo) {
+        this.apiKeyRepo = apiKeyRepo;
+        this.quotaPlanRepo = quotaPlanRepo;
     }
 
     @Override
-    public ApiKeyEntity createKey(UserAccountEntity user, String planName) {
-        ApiKeyEntity key = new ApiKeyEntity();
-        key.setKey(UUID.randomUUID().toString());
-        key.setOwner(user);
-
-        QuotaPlanEntity plan = quotaPlanRepository.findAll()
-                .stream()
-                .filter(p -> p.getName().equalsIgnoreCase(planName))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Plan not found"));
-
-        key.setPlan(plan);
-        return apiKeyRepository.save(key);
+    public ApiKey createApiKey(ApiKey key) {
+        Long planId = key.getPlan() != null ? key.getPlan().getId() : null;
+        if (planId == null) {
+            throw new BadRequestException("Plan required");
+        }
+        QuotaPlan plan = quotaPlanRepo.findById(planId)
+                .orElseThrow(ResourceNotFoundException::new);
+        if (!plan.isActive()) {
+            throw new BadRequestException("Plan not active");
+        }
+        return apiKeyRepo.save(key);
     }
 
     @Override
-    public Optional<ApiKeyEntity> getKey(String key) {
-        return apiKeyRepository.findByKey(key);
+    public ApiKey getApiKeyById(Long id) {
+        return apiKeyRepo.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
-    public List<ApiKeyEntity> getAllKeys() {
-        return apiKeyRepository.findAll();
+    public void deactivateApiKey(Long id) {
+        ApiKey key = getApiKeyById(id);
+        key.setActive(false);
+        apiKeyRepo.save(key);
+    }
+
+    @Override
+    public ApiKey getApiKeyByValue(String value) {
+        return apiKeyRepo.findByKeyValue(value)
+                .orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public List<ApiKey> getAllApiKeys() {
+        return apiKeyRepo.findAll();
     }
 }

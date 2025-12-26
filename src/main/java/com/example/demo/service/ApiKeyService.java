@@ -1,11 +1,13 @@
-// src/main/java/com/example/demo/service/AuthService.java
+// src/main/java/com/example/demo/service/ApiKeyService.java
 package com.example.demo.service;
 
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.AuthResponseDto;
-import com.example.demo.dto.RegisterRequestDto;
+import com.example.demo.entity.ApiKey;
+import java.util.List;
 
-public interface AuthService {
-    void register(RegisterRequestDto dto);
-    AuthResponseDto login(AuthRequestDto dto);
+public interface ApiKeyService {
+    ApiKey createApiKey(ApiKey key);
+    ApiKey getApiKeyById(Long id);
+    void deactivateApiKey(Long id);
+    ApiKey getApiKeyByValue(String value);
+    List<ApiKey> getAllApiKeys();
 }

@@ -1,8 +1,9 @@
+// src/main/java/com/example/demo/service/KeyExemptionService.java
 package com.example.demo.service;
 
 import com.example.demo.entity.KeyExemption;
 
 public interface KeyExemptionService {
     KeyExemption createExemption(KeyExemption e);
-    KeyExemption getExemptionByKey(Long apiKeyId);
+    KeyExemption getExemptionByKey(Long keyId);
 }

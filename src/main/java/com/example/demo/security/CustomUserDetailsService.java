@@ -1,28 +1,31 @@
+// src/main/java/com/example/demo/security/CustomUserDetailsService.java
 package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.List;
+import java.util.Collections;
 
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserAccountRepository repo;
+    private final UserAccountRepository userRepo;
 
-    public CustomUserDetailsService(UserAccountRepository repo) {
-        this.repo = repo;
+    public CustomUserDetailsService(UserAccountRepository userRepo) {
+        this.userRepo = userRepo;
     }
 
-    public UserDetails loadUserByUsername(String email) {
-        UserAccount u = repo.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User"));
-
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserAccount user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new User(
-                u.getEmail(),
-                u.getPassword(),
-                List.of(new SimpleGrantedAuthority(u.getRole()))
+                user.getEmail(),
+                user.getPassword(),
+                Collections.emptyList()
         );
     }
 }
