@@ -9,7 +9,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Service
 public class ApiUsageLogServiceImpl implements ApiUsageLogService {
+
 
     private final ApiUsageLogRepository logRepo;
     private final ApiKeyRepository keyRepo;

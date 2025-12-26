@@ -9,7 +9,11 @@ import com.example.demo.service.ApiKeyService;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ApiKeyServiceImpl implements ApiKeyService {
+
 
     private final ApiKeyRepository keyRepo;
     private final QuotaPlanRepository planRepo;
