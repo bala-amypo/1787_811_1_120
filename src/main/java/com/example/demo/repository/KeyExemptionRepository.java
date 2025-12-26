@@ -1,10 +1,10 @@
+// src/main/java/com/example/demo/repository/KeyExemptionRepository.java
 package com.example.demo.repository;
 
-import com.example.demo.entity.KeyExemptionEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.example.demo.entity.KeyExemption;
 import java.util.Optional;
 
-public interface KeyExemptionRepository extends JpaRepository<KeyExemptionEntity, Long> {
-    Optional<KeyExemptionEntity> findByApiKeyId(Long apiKeyId);
+public interface KeyExemptionRepository {
+    KeyExemption save(KeyExemption e);
+    Optional<KeyExemption> findByApiKey_Id(Long keyId);
 }

@@ -1,7 +1,7 @@
 // src/main/java/com/example/demo/entity/RateLimitEnforcement.java
 package com.example.demo.entity;
 
-public class RateLimitEnforcement {
+public class RateLimitEnforcementEntity {
     private Long id;
     private ApiKey apiKey;
     private int limitExceededBy;

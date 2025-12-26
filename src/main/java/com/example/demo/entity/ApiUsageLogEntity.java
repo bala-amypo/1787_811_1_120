@@ -3,7 +3,7 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
-public class ApiUsageLog {
+public class ApiUsageLogEntity {
     private Long id;
     private ApiKey apiKey;
     private String endpoint;

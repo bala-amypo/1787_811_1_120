@@ -1,7 +1,7 @@
 // src/main/java/com/example/demo/entity/QuotaPlan.java
 package com.example.demo.entity;
 
-public class QuotaPlanEntity {
+public class QuotaPlanEntityEntity {
     private Long id;
     private String planName;
     private int dailyLimit;

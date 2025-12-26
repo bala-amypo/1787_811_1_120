@@ -1,10 +1,13 @@
+// src/main/java/com/example/demo/repository/ApiKeyRepository.java
 package com.example.demo.repository;
 
-import com.example.demo.entity.ApiKeyEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.example.demo.entity.ApiKey;
+import java.util.List;
 import java.util.Optional;
 
-public interface ApiKeyRepository extends JpaRepository<ApiKeyEntity, Long> {
-    Optional<ApiKeyEntity> findByKey(String key);
+public interface ApiKeyRepository {
+    ApiKey save(ApiKey apiKey);
+    Optional<ApiKey> findById(Long id);
+    Optional<ApiKey> findByKeyValue(String keyValue);
+    List<ApiKey> findAll();
 }

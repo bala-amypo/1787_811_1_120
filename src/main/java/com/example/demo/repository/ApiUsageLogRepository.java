@@ -1,7 +1,13 @@
+// src/main/java/com/example/demo/repository/ApiUsageLogRepository.java
 package com.example.demo.repository;
 
-import com.example.demo.entity.ApiUsageLogEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.ApiUsageLog;
+import java.time.Instant;
+import java.util.List;
 
-public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLogEntity, Long> {
+public interface ApiUsageLogRepository {
+    ApiUsageLog save(ApiUsageLog log);
+    List<ApiUsageLog> findForKeyBetween(Long keyId, Instant start, Instant end);
+    int countForKeyBetween(Long keyId, Instant start, Instant end);
+    List<ApiUsageLog> findByApiKey_Id(Long keyId);
 }
