@@ -1,12 +1,14 @@
-// src/main/java/com/example/demo/repository/QuotaPlanRepository.java
 package com.example.demo.repository;
 
 import com.example.demo.entity.QuotaPlan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface QuotaPlanRepository {
-    QuotaPlan save(QuotaPlan plan);
-    Optional<QuotaPlan> findById(Long id);
+@Repository
+public interface QuotaPlanRepository extends JpaRepository<QuotaPlan, Long> {
     List<QuotaPlan> findAll();
+    Optional<QuotaPlan> findById(Long id);
+    QuotaPlan save(QuotaPlan plan);
 }
