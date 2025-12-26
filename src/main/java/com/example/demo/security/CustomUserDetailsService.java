@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    
-    @Autowired
+   
+    @Autowiredc=1 
     private UserAccountRepository userRepo;
 
     @Override
@@ -25,3 +25,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
+ mvn testng:test -Dtestng.suite.src=1 -Dtest=ApiRateLimiterQuotaManagerTest
