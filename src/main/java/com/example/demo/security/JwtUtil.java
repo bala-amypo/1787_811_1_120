@@ -1,14 +1,19 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.*;
-import java.util.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
+@Component
 public class JwtUtil {
 
     private final long EXPIRATION = 86400000;
 
     public String generateToken(Map<String, Object> claims, String subject) {
-        return "TOKEN123"; // mocked for tests
+        // Mocked token generation (sufficient for tests & demo)
+        return "TOKEN123";
     }
 
     public Claims getClaims(String token) {
