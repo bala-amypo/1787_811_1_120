@@ -1,0 +1,7 @@
+<suite name="API Rate Limiter Test Suite">
+    <test name="All Tests">
+        <classes>
+            <class name="com.example.demo.ApiRateLimiterQuotaManagerTest"/>
+        </classes>
+    </test>
+</suite>
