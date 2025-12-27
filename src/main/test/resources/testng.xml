@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <suite name="API Rate Limiter Test Suite">
     <test name="All Tests">
         <classes>
@@ -5,3 +6,4 @@
         </classes>
     </test>
 </suite>
+`
