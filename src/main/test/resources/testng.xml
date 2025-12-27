@@ -5,6 +5,3 @@
         </classes>
     </test>
 </suite>
-
-wc -c src/test/resources/testng.xml
-rm -f src/test/resources/testng.xml
